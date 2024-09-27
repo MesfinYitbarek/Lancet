@@ -25,7 +25,7 @@ const Vision = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-slate-100 dark:bg-gray-800 py-12 px-4 sm:px-6 lg:px-8 flex items-center">
+    <section className="min-h-screen bg-slate-100 dark:bg-gray-800 py-12 px-4 sm:px-6 lg:px-8 flex  items-center">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {sections.map((section, index) => (
@@ -35,12 +35,12 @@ const Vision = () => {
                 index % 2 === 0 ? 'md:mt-16' : 'md:mt-0'
               }`}
             >
-              <div className={`absolute inset-0 bg-gradient-to-r ${section.color} opacity-90`}></div>
+              <div className={`absolute inset-0  bg-gradient-to-r ${section.color} opacity-90`}></div>
               <div className="relative p-8">
                 <section.icon className="h-12 w-12 text-white mb-4" />
-                <h3 className="text-2xl font-bold text-white mb-4 font-nunito">{section.title}</h3>
+                <h3 className="text-2xl font-bold text-white mb-4 font-serif ">{section.title}</h3>
                 {Array.isArray(section.content) ? (
-                  <ul className="text-white space-y-2 font-inter">
+                  <ul className="text-white space-y-2 font-serif ">
                     {section.content.map((item, i) => (
                       <li key={i} className="flex items-center">
                         <span className="mr-2">•</span>
@@ -49,7 +49,7 @@ const Vision = () => {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-white font-inter">{section.content}</p>
+                  <p className="text-white font-serif ">{section.content}</p>
                 )}
               </div>
             </div>

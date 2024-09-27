@@ -26,7 +26,7 @@ const About = () => {
         className="relative bg-cover bg-center py-24 text-white"
         style={{ backgroundImage: `url(${image1})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-700 opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-700 opacity-70"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-6xl font-nunito font-bold mb-6">About Us</h1>
         </div>

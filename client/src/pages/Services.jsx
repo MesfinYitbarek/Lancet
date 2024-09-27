@@ -3,7 +3,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
 import { School, Business, Assessment, GroupWork, Timeline, Tune, CheckCircleOutline } from '@mui/icons-material';
-import image1 from "../assets/pexels-startup-stock-photos-7075.jpg"
+import image1 from "../assets/pexels-startup-stock-photos-7075.jpg";
+import image2 from "../assets/pexels-davdkuko-20336005.jpg";
+import image3 from "../assets/pexels-ketut-subiyanto-4584095.jpg";
+import image4 from "../assets/pexels-norman-milwood-236004651-28556245.jpg";
 
 const ServiceCard = ({ title, items, icon }) => (
   <motion.div 
@@ -92,7 +95,7 @@ const Services = () => {
         className="relative bg-cover bg-center py-24 text-white"
         style={{ backgroundImage: `url(${image1})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-600 to-slate-700 opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-700 opacity-70"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-6xl font-nunito font-bold mb-6">Our Services</h1>
         </div>
@@ -157,7 +160,7 @@ const Services = () => {
           <h2 className="text-3xl font-bold mb-8 text-blue-800">Ready to Elevate Your Professional Growth?</h2>
           <p className="text-xl text-gray-700 mb-8">Contact us today to discuss how we can tailor our services to meet your unique needs.</p>
           <motion.a 
-            href="#contact" 
+            href="/contact" 
             whileHover={{ scale: 1.05 }}
             className="bg-blue-600 text-white px-8 py-3 rounded-full text-lg hover:bg-blue-700 transition duration-300 inline-flex items-center"
           >
@@ -172,5 +175,4 @@ const Services = () => {
     </>
   );
 };
-
 export default Services;

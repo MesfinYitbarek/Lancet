@@ -43,7 +43,7 @@ function WhyChooseUsSection() {
     <section className="relative py-24 overflow-hidden">
       <div className="absolute inset-0 transform -skew-y-6  bg-gradient-to-r from-blue-700 to-indigo-500   "></div>
       <div className="container mx-auto px-4 relative z-10">
-        <h2 className="text-5xl font-nunito pt-10 font-bold text-center mb-20 text-white">
+        <h2 className="text-4xl md:text-5xl font-nunito pt-10 font-bold text-center mb-20 text-white">
           Why Choose Lancet Consultancy?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:px-10 font-montserrat">

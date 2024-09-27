@@ -49,7 +49,7 @@ const ServicesSection = () => {
   return (
     <section className="py-16 bg-gray-50 relative overflow-hidden" ref={containerRef}>
       <div className="container mx-auto px-4  relative z-10">
-        <h2 className="text-6xl font-nunito font-bold text-center  mb-32 ">Our Services</h2>
+        <h2 className="text-4xl md:text-5xl font-nunito font-bold text-center  mb-32 ">Our Services</h2>
         
         <div className="relative mb-16">
           <motion.div 

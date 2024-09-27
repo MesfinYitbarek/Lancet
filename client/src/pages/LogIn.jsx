@@ -10,7 +10,7 @@ const LogIn = () => {
         <div className="dark:bg-gray-800 bg-slate-50">
           <Header />
           <div className="flex justify-center items-center">
-            <div className="shadow-sm flex flex-col justify-center items-center dark:bg-gray-400 p-[2%] rounded-2xl sm:w-[650px] bg-slate-50 border border-slate-300 m-[3%]">
+            <div className=" flex flex-col justify-center items-center dark:bg-gray-400 p-[2%] rounded-2xl sm:w-[650px] bg-white shadow-xl  border-slate-300 m-[3%]">
               <h1 className="m-3 font-serif sm:text-[22px] text-blue-600">Hi, Welcome back!</h1>
               <form  action="" className="flex flex-col justify-between items-center gap-6">
                 <input
@@ -44,12 +44,7 @@ const LogIn = () => {
                   <span className="text-blue-800 underline">Sign Up</span>
                 </Link>
               </div>
-              <div className="flex gap-2 sm:text-[17px] justify-center mt-2">
-                <p>Forgot your password?</p>
-                <Link to="/forgot-password">
-                  <span className="text-blue-800 underline">Reset Password</span>
-                </Link>
-              </div>
+              
               <div className="">
 
               </div>

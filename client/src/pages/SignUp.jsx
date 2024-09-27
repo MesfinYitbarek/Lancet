@@ -10,8 +10,8 @@ const SignUp = () => {
 
     
           <div className="  flex justify-center items-center">
-            <div className="dark:bg-gray-400 p-[5%] rounded-2xl sm:w-[650px] bg-slate-50 border border-slate-300 m-[5%]">
-              <h1 className="m-3 font-serif sm:text-[22px] text-blue-600">Hi, Welcome back!</h1>
+            <div className="dark:bg-gray-400 p-[5%] rounded-2xl sm:w-[650px] bg-white shadow-xl  border-slate-300 m-[5%]">
+              <h1 className="mb-3 font-serif sm:text-[28px] text-blue-600 text-center">Create an Account</h1>
               <form  className="flex flex-col justify-between items-center gap-6">
                 <input
                   type="text"

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowForward } from '@mui/icons-material';
-import imag from "../assets/pexels-minan1398-683402.jpg"
+import imag from "../assets/pexels-bithinrajxlr8-2763927.jpg"
 const CallToAction = () => {
   return (
     <section className="relative py-28">
@@ -22,7 +22,7 @@ const CallToAction = () => {
         <p className="text-xl text-white mb-8 font-inter">
           Join Lancet Consultancy Services and take the next step in your career development.
         </p>
-        <Link to="/register" className="inline-flex items-center bg-blue-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition duration-300 font-inter">
+        <Link to="/sign-up" className="inline-flex items-center bg-blue-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition duration-300 font-inter">
           Get Started
           <ArrowForward className="ml-2" />
         </Link>
