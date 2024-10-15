@@ -5,8 +5,11 @@ import {
     PersonOutlined, Phone, SearchOutlined, SearchRounded, Telegram, Twitter, Menu as MenuIcon
 } from '@mui/icons-material';
 import logo from "../assets/Lancet_CPD_Center-1.jpg";
+import { useSelector } from 'react-redux';
+import SignOut from '../pages/SignOut';
 
 function Header() {
+    const { currentUser } = useSelector((state) => state.user);
     const [showSearch, setShowSearch] = useState(false);
     const [showAccount, setShowAccount] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -30,7 +33,7 @@ function Header() {
 
     return (
         <header className="font-lato">
-             {/* Top bar */}
+            {/* Top bar */}
             <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white py-2 px-4 md:px-10">
                 <div className="container mx-auto flex justify-between items-center">
                     <div className="hidden md:flex text-sm justify-center items-center gap-4 md:gap-10">
@@ -45,14 +48,14 @@ function Header() {
                     </ul>
                 </div>
             </div>
-          {/* Main header */}
-          <div className={`transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 right-0 z-50 bg-blue-800 text-white' : 'bg-white text-blue-900'}`}>
+            {/* Main header */}
+            <div className={`transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 right-0 z-50 bg-blue-800 text-white' : 'bg-white text-blue-900'}`}>
                 <div className="container mx-auto px-4 md:px-16 py-2 flex justify-between items-center">
                     <Link to="/" className='flex items-center gap-4 group'>
                         <img src={logo} alt="Lancet Logo" className='w-20 md:w-28 transition-transform duration-300 group-hover:scale-105' />
                         <div className='flex flex-col items-start justify-center'>
                             <h1 className="  text-2xl md:text-3xl font-extrabold font-serif tracking-wide group-hover:text-blue-500 transition-colors duration-300">Lancet</h1>
-                            <span className='text-lg md:text-xl font-light tracking-widest uppercase group-hover:text-blue-400 transition-colors duration-300'>Consultancy</span> 
+                            <span className='text-lg md:text-xl font-light tracking-widest uppercase group-hover:text-blue-400 transition-colors duration-300'>Consultancy</span>
                         </div>
                     </Link>
 
@@ -73,11 +76,28 @@ function Header() {
                                 {showSearch ? <Close /> : <SearchOutlined fontSize="medium" />}
                             </button>
                         </div>
-                        <div className={`p-2 rounded-full ${isSticky ? 'hover:bg-blue-700' : 'hover:bg-blue-100'} transition duration-300`}>
+                        {!currentUser ? (<div className={`p-2 rounded-full ${isSticky ? 'hover:bg-blue-700' : 'hover:bg-blue-100'} transition duration-300`}>
                             <button className="cursor-pointer" onClick={handleAccount}>
                                 <PersonOutlined fontSize="medium" />
                             </button>
                         </div>
+                        ) : (
+                            <div className=" group">
+                                <Link to={`${currentUser.role == "admin" ? "/admin" : "/"}`}>
+                                    <img
+                                        src={currentUser.avatar}
+                                        alt="profile"
+                                        className=" w-10 rounded-full"
+                                    />
+                                </Link>
+                                <div className=" absolute z-[9999]  hidden group-hover:block">
+                                    <h2>
+                                         <SignOut /> 
+                                    </h2>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="md:hidden">
                             <button onClick={toggleMobileMenu} className="p-2">
                                 {showMobileMenu ? <Close /> : <MenuIcon />}
