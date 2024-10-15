@@ -1,11 +1,9 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { signoutUserFailure, signoutUserStart, signoutUserSuccess } from "../redux/user/userSlice";
+import { signoutUserFailure, signoutUserStart, signoutUserSuccess } from "../../redux/user/userSlice";
 const SignOut = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const user = useSelector(state => state.user);
     const handleSignout = async () => {
         try {
             dispatch(signoutUserStart());

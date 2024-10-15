@@ -32,7 +32,7 @@ export const signin = async (req, res, next) => {
       if (!validPassword) return next(errorHandler(401, 'Invalid password!'));
   
       // Generate JWT token
-      const token = jwt.sign({ id: validUser._id }, "hbcdsc43njm4jhjn537", { expiresIn: '1h' });
+      const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
       const { password: pass, ...rest } = validUser._doc;
       res

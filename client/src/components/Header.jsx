@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Close, Email, Facebook, Instagram,
@@ -6,7 +6,8 @@ import {
 } from '@mui/icons-material';
 import logo from "../assets/Lancet_CPD_Center-1.jpg";
 import { useSelector } from 'react-redux';
-import SignOut from '../pages/SignOut';
+import SignOut from '../pages/Authentication/SignOut';
+
 
 function Header() {
     const { currentUser } = useSelector((state) => state.user);
@@ -82,18 +83,22 @@ function Header() {
                             </button>
                         </div>
                         ) : (
-                            <div className=" group">
-                                <Link to={`${currentUser.role == "admin" ? "/admin" : "/"}`}>
-                                    <img
-                                        src={currentUser.avatar}
-                                        alt="profile"
-                                        className=" w-10 rounded-full"
-                                    />
-                                </Link>
-                                <div className=" absolute z-[9999]  hidden group-hover:block">
-                                    <h2>
-                                         <SignOut /> 
-                                    </h2>
+                            <div className="group mr-4 lg:mr-10 relative">
+                                <img className="rounded-full h-9 w-9 object-cover" src={currentUser.avatar} alt="profile" />
+                                <div className="absolute z-[9999] right-3 hidden group-hover:block w-[160px] bg-white p-2 text-black shadow-sm">
+                                    <ul className="flex flex-col gap-3 py-2">
+                                        <Link to={`/${currentUser.role.toLowerCase()}`} className="hover:bg-slate-200 py-1 px-3">
+                                            <h3>My Account</h3>
+                                        </Link>
+                                        <hr />
+                                        <Link to={"/profile"} className="hover:bg-slate-200 py-1 px-3">
+                                            <h3>Profile</h3>
+                                        </Link>
+                                        <hr />
+                                        <h2 className="hover:bg-slate-200 py-1 px-3">
+                                            <SignOut />
+                                        </h2>
+                                    </ul>
                                 </div>
                             </div>
                         )}

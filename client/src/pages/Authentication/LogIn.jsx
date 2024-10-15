@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice';
-
+import { signInFailure, signInStart, signInSuccess } from '../../redux/user/userSlice';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 const LogIn = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);

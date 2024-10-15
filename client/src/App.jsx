@@ -1,13 +1,16 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter , Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
 import ContactUs from './pages/ContactUs';
-import LogIn from './pages/LogIn';
-import SignUp from './pages/SignUp';
 import Services from './pages/Services';
 import Training from './pages/Trainig';
 import CourseDetail from './pages/CourseDetail';
+import AdminContainer from './pages/Containers/Admin';
+import Instructor from './pages/Containers/Instructor';
+import StudentContainer from './pages/Containers/Student';
+import LogIn from './pages/Authentication/LogIn';
+import SignUp from './pages/Authentication/SignUp';
+import Create from './components/Admin/Category/Create';
 
 const App = () => {
   return (
@@ -21,6 +24,10 @@ const App = () => {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/training" element={<Training />} />
         <Route path="/course/:id" element={<CourseDetail />} />
+        <Route path="/admin" element={<AdminContainer />} />
+        <Route path="/instructor" element={<Instructor />} />
+        <Route path="/student" element={<StudentContainer />} />
+        <Route path="/create-category" element={<Create />} />
       </Routes>
     </BrowserRouter>
   );

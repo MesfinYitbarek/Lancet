@@ -2,24 +2,31 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import userRouter from './routes/user.js'
+import categoryRouter from './routes/category.js'
+import cookieParser from 'cookie-parser';
 dotenv.config()
-mongoose.connect("mongodb+srv://mesfinyitbarek55:12348109@lancet.4n0vn.mongodb.net/?retryWrites=true&w=majority&appName=Lancet").then(()=> {
-    console.log("Connected to Mongo")
-}).catch ((err) => {
-    console.log(err)
-})
+
+// Connect to MongoDB database
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err.message);
+  });
 
 const app = express()
-
+app.use(cookieParser());
 //middleware
 app.use(express.json())
 
 app.use('/api/user', userRouter)
+app.use('/api/category', categoryRouter)
 
 
-app.listen(3000, ()=> {
-    console.log("Server is running on port 3000")
-})
 
 
 app.use((err, req, res, next) => {
