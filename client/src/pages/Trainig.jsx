@@ -1,39 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { FaSearch, FaGraduationCap, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { motion } from 'framer-motion';
+import axios from 'axios'; // Make sure to install axios
 
 import image1 from "../assets/pexels-startup-stock-photos-7075.jpg"
 
-const courses = [
-  { id: 1, title: 'Continuous Professional Development (CPD)', category: 'Regular', duration: '40 hours', description: 'Enhance your professional skills with our comprehensive CPD program.', image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y291cnNlfGVufDB8fDB8fHww' },
-  { id: 2, title: 'Research Methods', category: 'Regular', duration: '30 hours', description: 'Learn advanced research methodologies and techniques.', image: 'https://images.unsplash.com/file-1705123271268-c3eaf6a79b21image?w=416&dpr=2&auto=format&fit=crop&q=60' },
-  { id: 3, title: 'Grant Proposal Writing', category: 'Regular', duration: '20 hours', description: 'Master the art of writing compelling grant proposals.', image: 'https://plus.unsplash.com/premium_photo-1682787494977-d013bb5a8773?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y291cnNlfGVufDB8fDB8fHww' },
-  { id: 4, title: 'Statistical Software (R)', category: 'Regular', duration: '25 hours', description: 'Gain proficiency in R for statistical analysis and data visualization.', image: 'https://images.unsplash.com/photo-1557804483-ef3ae78eca57?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y291cnNlfGVufDB8fDB8fHww' },
-  { id: 5, title: 'Kobo Mobile Data Collection', category: 'Tailor-made', duration: '15 hours', description: 'Learn to collect and manage data efficiently using Kobo Toolbox.', image: 'https://source.unsplash.com/random/800x600?mobile' },
-  { id: 6, title: 'Community Engagement', category: 'Tailor-made', duration: '10 hours', description: 'Develop strategies for effective community engagement and outreach.', image: 'https://plus.unsplash.com/premium_photo-1681248156500-8f209e8e466e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y291cnNlfGVufDB8fDB8fHww' },
-  { id: 7, title: 'Procurement and Supply Chain Management', category: 'Tailor-made', duration: '35 hours', description: 'Master the principles of efficient procurement and supply chain management.', image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y291cnNlfGVufDB8fDB8fHww' },
-  { id: 8, title: 'Preparation for Licensure Exam', category: 'Tailor-made', duration: '50 hours', description: 'Comprehensive preparation for your professional licensure examination.', image: 'https://plus.unsplash.com/premium_photo-1682284352941-58dceb6cd601?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y291cnNlfGVufDB8fDB8fHww' },
-];
-
-const categories = ['All Categories', 'Regular', 'Tailor-made'];
+const categories = ['All Categories', 'Computer Science', 'Other Categories']; // Update based on your actual categories
 const sortOptions = ['Title', 'Duration'];
 
 const Training = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [sortBy, setSortBy] = useState('Title');
-  const [filteredCourses, setFilteredCourses] = useState(courses);
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [courses, setCourses] = useState([]);
   const coursesPerPage = 6;
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get('/api/courses/courses'); // Adjust the URL to match your API endpoint
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   useEffect(() => {
     let result = courses;
 
     if (selectedCategory !== 'All Categories') {
-      result = result.filter(course => course.category === selectedCategory);
+      result = result.filter(course => course.catagory === selectedCategory);
     }
 
     if (searchTerm) {
@@ -52,7 +55,7 @@ const Training = () => {
 
     setFilteredCourses(result);
     setCurrentPage(1);
-  }, [searchTerm, selectedCategory, sortBy]);
+  }, [searchTerm, selectedCategory, sortBy, courses]);
 
   // Get current courses
   const indexOfLastCourse = currentPage * coursesPerPage;
@@ -129,11 +132,11 @@ const Training = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:px-20 lg:gap-12 gap-8">
           {currentCourses.map(course => (
-            <div key={course.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex flex-col">
+            <div key={course._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex flex-col">
               <div className="relative">
-                <img src={course.image} alt={course.title} className="w-full h-48 object-cover" />
+                <img src={course.imageUrl} alt={course.title} className="w-full h-48 object-cover" />
                 <span className="absolute top-0 left-0 bg-blue-500 text-white px-2 py-1 m-2 rounded-md text-sm font-semibold">
-                  {course.category}
+                  {course.catagory}
                 </span>
               </div>
               <div className="p-6 flex-grow flex flex-col justify-between">
@@ -143,7 +146,7 @@ const Training = () => {
                 </div>
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-sm text-gray-500">{course.duration}</span>
-                  <Link to={`/course/${course.id}`} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center">
+                  <Link to={`/course/${course._id}`} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center">
                     <FaGraduationCap className="mr-2" />
                     Explore
                   </Link>
@@ -152,10 +155,6 @@ const Training = () => {
             </div>
           ))}
         </div>
-
-        {filteredCourses.length === 0 && (
-          <p className="text-center text-gray-500 mt-8 text-xl">No courses found.</p>
-        )}
 
         {/* Pagination */}
         {filteredCourses.length > coursesPerPage && (

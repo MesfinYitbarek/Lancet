@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import userRouter from './routes/user.js'
 import categoryRouter from './routes/category.js'
 import cookieParser from 'cookie-parser';
+import courseRouter from './routes/courses.js'
 dotenv.config()
 
 // Connect to MongoDB database
@@ -19,13 +20,16 @@ mongoose.connect(process.env.MONGO_URI)
   });
 
 const app = express()
-app.use(cookieParser());
+
 //middleware
 app.use(express.json())
+app.use(cookieParser());
 
+
+// Routes
 app.use('/api/user', userRouter)
 app.use('/api/category', categoryRouter)
-
+app.use("/api/courses", courseRouter);
 
 
 
