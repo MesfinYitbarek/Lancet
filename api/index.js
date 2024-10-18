@@ -6,6 +6,7 @@ import categoryRouter from './routes/category.js'
 import cookieParser from 'cookie-parser';
 import courseRouter from './routes/courses.js'
 import userForAdminRouter from './routes/userForAdmin.js'
+import path from"path"
 dotenv.config()
 
 // Connect to MongoDB database
@@ -20,6 +21,8 @@ mongoose.connect(process.env.MONGO_URI)
     console.error("MongoDB connection error:", err.message);
   });
 
+  const __dirname = path.resolve();
+
 const app = express()
 
 //middleware
@@ -33,7 +36,11 @@ app.use('/api/userForAdmin', userForAdminRouter)
 app.use('/api/category', categoryRouter)
 app.use("/api/courses", courseRouter);
 
+app.use(express.static(path.join(__dirname, '/client/dist')));
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
