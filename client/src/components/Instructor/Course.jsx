@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import { useSelector } from "react-redux";
 import Pagination from "@mui/material/Pagination";
@@ -7,6 +7,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { Timeline } from "@mui/icons-material";
 import { useSearch } from "../../SearchContext";
+import Modal from "@mui/material/Modal";
+import Button from "@mui/material/Button";
 
 const Course = () => {
   const { searchTerm } = useSearch();
@@ -17,6 +19,8 @@ const Course = () => {
   const [coursesPerPage] = useState(6);
   const [error, setError] = useState(null);
   const [expandedCourse, setExpandedCourse] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -53,6 +57,23 @@ const Course = () => {
       fetchCourses();
     }
   }, [currentUser, courses]);
+
+  const handleOpenDeleteModal = (courseId) => {
+    setCourseToDelete(courseId);
+    setDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setCourseToDelete(null);
+  };
+
+  const confirmDelete = async () => {
+    if (courseToDelete) {
+      await handleCourseDelete(courseToDelete);
+      handleCloseDeleteModal();
+    }
+  };
 
   const handleCourseDelete = async (courseid) => {
     try {
@@ -112,10 +133,7 @@ const Course = () => {
               {slicedCourses &&
                 slicedCourses.length > 0 &&
                 slicedCourses.map((course) => (
-                  <div
-                    key={course._id}
-                    className="bg-white rounded-2xl border border-slate-300 overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow duration-300"
-                  >
+                  <div key={course._id} className="bg-white rounded-2xl border border-slate-300 overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow duration-300">
                     <img
                       src={course.imageUrl}
                       alt={course.title}
@@ -161,17 +179,16 @@ const Course = () => {
                       <hr className="my-3" />
                       <div className="flex flex-wrap gap-2 justify-between items-center">
                         <Link
-                          to={`/courseDetails/${course._id}`}
+                          to={`/course/${course._id}`}
                           className="inline-block px-3 py-1 border-blue-800 border text-blue-800 font-bold rounded hover:bg-blue-800 hover:text-white transition-colors duration-300"
                         >
                           Details
                         </Link>
                         <button
-                          disabled={loading}
-                          onClick={() => handleCourseDelete(course._id)}
+                          onClick={() => handleOpenDeleteModal(course._id)}
                           className="px-3 py-1 border-red-500 border text-red-600 font-bold rounded hover:bg-red-500 hover:text-white transition-colors duration-300"
                         >
-                          {loading ? "Loading..." : "Delete"}
+                          Delete
                         </button>
                         <Link
                           to={`/course-edit/${course._id}`}
@@ -215,6 +232,33 @@ const Course = () => {
                 color="primary"
               />
             </div>
+            <Modal
+              open={deleteModalOpen}
+              onClose={handleCloseDeleteModal}
+              aria-labelledby="delete-modal-title"
+              aria-describedby="delete-modal-description"
+            >
+              <Box sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                bgcolor: 'background.paper',
+                boxShadow: 24,
+                p: 4,
+                borderRadius: 2,
+              }}>
+                <h2 id="delete-modal-title" className="text-xl font-bold mb-4">Confirm Deletion</h2>
+                <p id="delete-modal-description" className="mb-4">
+                  Are you sure you want to delete this course? This action cannot be undone.
+                </p>
+                <div className="flex justify-end gap-4">
+                  <Button onClick={handleCloseDeleteModal} variant="outlined">Cancel</Button>
+                  <Button onClick={confirmDelete} variant="contained" color="error">Delete</Button>
+                </div>
+              </Box>
+            </Modal>
           </>
         )}
       </div>

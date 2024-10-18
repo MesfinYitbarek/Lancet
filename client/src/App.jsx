@@ -12,6 +12,7 @@ import StudentContainer from './pages/Containers/Student';
 import LogIn from './pages/Authentication/LogIn';
 import SignUp from './pages/Authentication/SignUp';
 import Create from './components/Admin/Category/Create';
+import EditCourse from './components/Instructor/EditCourse';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/instructor" element={<Instructor />} />
         <Route path="/student" element={<StudentContainer />} />
         <Route path="/create-category" element={<Create />} />
+        <Route path="/course-edit/:id" element={<EditCourse />} />
       </Routes>
     </BrowserRouter>
   );

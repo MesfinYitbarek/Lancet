@@ -9,7 +9,7 @@ courseRouter.get("/personalcourses/:id",verifyToken, personalcourses);
 courseRouter.get("/courseDetails/:id", courseDetails);
 courseRouter.get("/courseEdit/:id", courseEdit);
 courseRouter.delete("/deletecourses/:id",verifyToken, deletecourses);
-courseRouter.post("/updatecourses/:id",verifyToken, updatecourses);
+courseRouter.put("/updatecourses/:id",verifyToken, updatecourses);
 
 
 export default courseRouter;

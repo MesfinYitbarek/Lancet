@@ -5,6 +5,7 @@ import userRouter from './routes/user.js'
 import categoryRouter from './routes/category.js'
 import cookieParser from 'cookie-parser';
 import courseRouter from './routes/courses.js'
+import userForAdminRouter from './routes/userForAdmin.js'
 dotenv.config()
 
 // Connect to MongoDB database
@@ -28,6 +29,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/user', userRouter)
+app.use('/api/userForAdmin', userForAdminRouter)
 app.use('/api/category', categoryRouter)
 app.use("/api/courses", courseRouter);
 
