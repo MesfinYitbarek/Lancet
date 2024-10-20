@@ -4,8 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node api/index.js",
     "dev": "nodemon api/index.js",
-    "start": "node api/index.js"
+    "build": "rm -rf client/package-lock.json client/node_modules && npm install --force && npm install --force --prefix client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "",
