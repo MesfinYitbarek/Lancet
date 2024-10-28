@@ -103,10 +103,7 @@ const Users = () => {
   ];
 
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        User Management
-      </Typography>
+    <Box sx={{ width: '100%', bgcolor: 'background.paper', p: 3 }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
         <Tabs value={tab} onChange={handleTabChange} aria-label="user tabs">
           {userTypes.map((type, index) => (

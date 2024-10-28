@@ -87,10 +87,7 @@ const AdminContainer = () => {
           } z-40 ${isSmallScreen ? "shadow-lg" : ""}`}
         >
           <div className="font-bold text-blue-800 leading-10 text-lg mt-16">
-            <Link to="/">
-              <CastForEducationIcon className="text-blue-800 mb-2" /> Lancet{" "}
-              <span>Admin</span>
-            </Link>
+            
           </div>
           <nav className="text-start flex p-2 flex-col gap-2">
             {navigationItems.map((item, index) => (

@@ -36,7 +36,7 @@ const Vision = () => {
               }`}
             >
               <div className={`absolute inset-0  bg-gradient-to-r ${section.color} opacity-90`}></div>
-              <div className="relative p-8">
+              <div className="relative p-8 hover:bg-blue-600">
                 <section.icon className="h-12 w-12 text-white mb-4" />
                 <h3 className="text-2xl font-bold text-white mb-4 font-serif ">{section.title}</h3>
                 {Array.isArray(section.content) ? (

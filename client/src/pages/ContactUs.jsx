@@ -88,7 +88,7 @@ const ContactUs = () => {
             data-aos="fade-up"
             data-aos-once="true"
 
-            className="flex flex-col dark:text-white dark:bg-gray-500 space-y-4 w-full max-w-[650px] bg-white shadow-md p-6 md:p-10 rounded-xl border-slate-400"
+            className="flex flex-col dark:text-white dark:bg-gray-500 space-y-4 w-full max-w-[650px] bg-white shadow-md p-6 md:p-10 rounded-xl border border-slate-400"
           >
             <div className="flex flex-col space-y-2">
               <input

@@ -1,71 +1,88 @@
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { SearchOutlined } from "@mui/icons-material";
+import { SearchOutlined, NotificationsNone, ExitToApp } from "@mui/icons-material";
+import { Badge, Avatar, Menu, MenuItem, IconButton } from "@mui/material";
 import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
-import MessageIcon from "@mui/icons-material/Message";
-import { Badge, Stack } from "@mui/material";
+import SignOut from "../pages/Authentication/SignOut";
 
-
-const DashboardHeader = () => {
+const DashboardHeader = ({ setActiveItem }) => {
     const { currentUser } = useSelector((state) => state.user);
+    const [anchorEl, setAnchorEl] = useState(null);
 
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
-        <div className="bg-blue-800 p-6 py-2 fixed top-0 left-0 w-full z-50">
-            <div className="bg-white ml-20 sm:ml-[230px] flex justify-between items-center py-2 px-2 sm:px-10">
-                <div className="font-bold sm:flex gap-1 hidden">
-                    <CalendarViewDayIcon />
-                    <h1 className="opacity-70">
-                        Hello <span>{currentUser.username}</span>
-                        <span className="px-2 py-1">
-                            <EmojiPeopleIcon className="text-yellow-500" />
-                        </span>
-                    </h1>
-                </div>
-
-                <div className="flex items-center">
-                    <button className="p-1 px-2 bg-blue-800 text-white">
-                        <SearchOutlined />
-                    </button>
-                    <input
-                        type="text"
-                        placeholder="Search here"
-                        className="px-2 py-1.5 w-full bg-gray-100 border-gray-400"
-
-                    />
-                </div>
-                <div className={`gap-16 sm:flex hidden justify-between items-center`}>
-                    <div
-                        className={`${currentUser.role === "instructor" || currentUser.role === "student"
-                            ? "hidden"
-                            : "flex"
-                            } bg-gray-100 px-2 py-1.5`}
-                    >
-                        <Stack spacing={4} direction="row" sx={{ color: "action.active" }}>
-                            <Badge
-                                color="secondary"
-
-                                style={{ cursor: 'pointer' }}
-                            >
-                                <MessageIcon />
-                            </Badge>
-                        </Stack>
+        <header className="bg-white shadow-md fixed top-0 left-0 w-full z-50 transition-all duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center py-4">
+                    <div className="flex items-center space-x-4">
+                        <CalendarViewDayIcon className="text-blue-600" />
+                        <h1 className="text-lg font-semibold text-gray-800 hidden sm:block">
+                            Hello, <span className="text-blue-600">{currentUser.username}</span>
+                            <span className="ml-2">
+                                <EmojiPeopleIcon className="text-yellow-500" />
+                            </span>
+                        </h1>
                     </div>
 
-                    <Link to={"/profile"}>
-                        <img
-                            src={currentUser.avatar}
-                            alt="profile"
-                            className="h-8 w-8 rounded-md"
-                        />
-                    </Link>
+                    <div className="flex-1 max-w-xl mx-4">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search here"
+                                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            />
+                            <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        </div>
+                    </div>
 
+                    <div className="flex items-center space-x-4">
+                        <IconButton color="primary">
+                            <Badge badgeContent={3} color="error">
+                                <NotificationsNone />
+                            </Badge>
+                        </IconButton>
 
+                        <div className="relative">
+                            <Avatar
+                                src={currentUser.avatar}
+                                alt={currentUser.username}
+                                className="cursor-pointer"
+                                onClick={handleClick}
+                            />
+                            <Menu
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={handleClose}>
+                                    <Link to="/profile" className="flex items-center">
+                                        <Avatar
+                                            src={currentUser.avatar}
+                                            alt={currentUser.username}
+                                            className="w-6 h-6 mr-2"
+                                        />
+                                        My Profile
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem onClick={handleClose}>
+                                    <SignOut/>
+                                </MenuItem>
+                            </Menu>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </header>
     );
 };
 

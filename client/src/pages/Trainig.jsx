@@ -1,14 +1,14 @@
-import  { useState, useEffect } from 'react';
-import { FaSearch, FaGraduationCap, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { FaSearch, FaGraduationCap, FaChevronLeft, FaChevronRight, FaFilter, FaSort } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { motion } from 'framer-motion';
-import axios from 'axios'; // Make sure to install axios
+import axios from 'axios';
 
 import image1 from "../assets/pexels-startup-stock-photos-7075.jpg"
 
-const categories = ['All Categories', 'Computer Science', 'Other Categories']; // Update based on your actual categories
+const categories = ['All Categories', 'Computer Science', 'Other Categories'];
 const sortOptions = ['Title', 'Duration'];
 
 const Training = () => {
@@ -23,7 +23,7 @@ const Training = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('/api/courses/courses'); // Adjust the URL to match your API endpoint
+        const response = await axios.get('/api/courses/courses');
         setCourses(response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -57,12 +57,10 @@ const Training = () => {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory, sortBy, courses]);
 
-  // Get current courses
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
   const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -95,9 +93,9 @@ const Training = () => {
             </div>
           </div>
 
-          <div className="relative w-full md:w-auto">
+          <div className="relative w-full md:w-auto group">
             <select
-              className="w-full md:w-auto appearance-none border rounded-md px-4 py-2 pr-8 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 bg-white"
+              className="w-full md:w-auto appearance-none border rounded-md pl-10 pr-8 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 bg-white cursor-pointer"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -105,6 +103,9 @@ const Training = () => {
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3 text-blue-500">
+              <FaFilter className="h-4 w-4" />
+            </div>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
@@ -112,9 +113,9 @@ const Training = () => {
             </div>
           </div>
 
-          <div className="relative w-full md:w-auto">
+          <div className="relative w-full md:w-auto group">
             <select
-              className="w-full md:w-auto appearance-none border rounded-md px-4 py-2 pr-8 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 bg-white"
+              className="w-full md:w-auto appearance-none border rounded-md pl-10 pr-8 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 bg-white cursor-pointer"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
@@ -122,6 +123,9 @@ const Training = () => {
                 <option key={option} value={option}>Sort by {option}</option>
               ))}
             </select>
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3 text-blue-500">
+              <FaSort className="h-4 w-4" />
+            </div>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
@@ -159,11 +163,11 @@ const Training = () => {
         {/* Pagination */}
         {filteredCourses.length > coursesPerPage && (
           <div className="flex justify-center mt-8">
-            <nav className="flex items-center">
+            <nav className="flex items-center bg-white px-4 py-2 rounded-lg shadow-md">
               <button 
                 onClick={() => paginate(currentPage - 1)} 
                 disabled={currentPage === 1}
-                className="mr-2 px-4 py-2 border rounded-md bg-white text-blue-500 hover:bg-blue-100 disabled:opacity-50"
+                className="mr-2 p-2 rounded-full bg-gray-100 text-blue-500 hover:bg-blue-100 disabled:opacity-50 transition duration-300"
               >
                 <FaChevronLeft />
               </button>
@@ -171,9 +175,11 @@ const Training = () => {
                 <button
                   key={i}
                   onClick={() => paginate(i + 1)}
-                  className={`mx-1 px-4 py-2 border rounded-md ${
-                    currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 hover:bg-blue-100'
-                  }`}
+                  className={`mx-1 w-8 h-8 flex items-center justify-center rounded-full ${
+                    currentPage === i + 1 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-gray-100 text-blue-500 hover:bg-blue-100'
+                  } transition duration-300`}
                 >
                   {i + 1}
                 </button>
@@ -181,7 +187,7 @@ const Training = () => {
               <button 
                 onClick={() => paginate(currentPage + 1)} 
                 disabled={currentPage === Math.ceil(filteredCourses.length / coursesPerPage)}
-                className="ml-2 px-4 py-2 border rounded-md bg-white text-blue-500 hover:bg-blue-100 disabled:opacity-50"
+                className="ml-2 p-2 rounded-full bg-gray-100 text-blue-500 hover:bg-blue-100 disabled:opacity-50 transition duration-300"
               >
                 <FaChevronRight />
               </button>
