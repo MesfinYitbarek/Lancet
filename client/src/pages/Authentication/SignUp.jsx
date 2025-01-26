@@ -18,6 +18,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     try {
       setLoading(true);
       const res = await fetch('/api/user/signup', {

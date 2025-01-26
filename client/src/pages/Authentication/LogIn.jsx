@@ -10,7 +10,7 @@ const LogIn = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch()
   const navigate = useNavigate();
-  console.log(formData)
+ 
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -20,8 +20,16 @@ const LogIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
+    if (!formData.username || !formData.password) {
+      setError('Both username and password are required.');
+      return;
+    }
+
     try {
-      dispatch(signInStart())
+       setLoading(true);
+      dispatch(signInStart());
       const res = await fetch('/api/user/signin', {
         method: "POST",
         headers: {
@@ -30,14 +38,17 @@ const LogIn = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message))
-        return;
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to sign in.');
       }
-      dispatch(signInSuccess(data))
-      navigate("/");
+
+      dispatch(signInSuccess(data));
+      navigate('/');
     } catch (error) {
-      dispatch(signInFailure(error.message))
+      setError(error.message);
+      dispatch(signInFailure(error.message));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,7 +85,7 @@ const LogIn = () => {
             >
               {loading ? "Loading..." : "Sign In"}
             </button>
-            {error && <p className=" text-red-500 mt-5">{error}</p>}
+            {error && <p className="text-red-500 mt-5">{error}</p>}
           </form>
           <div className="flex gap-2 sm:text-[17px] justify-center mt-2">
             <p>Don't have an account?</p>
