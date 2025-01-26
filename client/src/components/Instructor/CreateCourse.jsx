@@ -15,7 +15,6 @@ const CreateCourse = () => {
   const [modules, setModules] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  console.log(categories)
   const navigate = useNavigate();
 
   useEffect(() => {

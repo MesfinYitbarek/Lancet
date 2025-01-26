@@ -5,30 +5,50 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-import image1 from "../assets/pexels-startup-stock-photos-7075.jpg"
+import image1 from "../assets/pexels-startup-stock-photos-7075.jpg";
 
-const categories = ['All Categories', 'Computer Science', 'Other Categories'];
-const sortOptions = ['Title', 'Duration'];
+const sortOptions = ['Title Ascending', 'Title Descending', 'Duration Ascending', 'Duration Descending'];
 
 const Training = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
-  const [sortBy, setSortBy] = useState('Title');
+  const [sortBy, setSortBy] = useState('Title Ascending');
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const coursesPerPage = 6;
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/category/display");
+        const data = await response.json();
+        setCategories(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
+      setLoading(true);
       try {
         const response = await axios.get('/api/courses/courses');
         setCourses(response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchCourses();
   }, []);
 
@@ -46,11 +66,16 @@ const Training = () => {
     }
 
     result.sort((a, b) => {
-      if (sortBy === 'Title') {
+      if (sortBy === 'Title Ascending') {
         return a.title.localeCompare(b.title);
-      } else {
+      } else if (sortBy === 'Title Descending') {
+        return b.title.localeCompare(a.title);
+      } else if (sortBy === 'Duration Ascending') {
         return parseInt(a.duration) - parseInt(b.duration);
+      } else if (sortBy === 'Duration Descending') {
+        return parseInt(b.duration) - parseInt(a.duration);
       }
+      return 0;
     });
 
     setFilteredCourses(result);
@@ -99,8 +124,9 @@ const Training = () => {
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
+              <option value="All Categories">All Categories</option>
               {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category._id} value={category.name}>{category.name}</option>
               ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3 text-blue-500">
@@ -134,33 +160,40 @@ const Training = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:px-20 lg:gap-12 gap-8">
-          {currentCourses.map(course => (
-            <div key={course._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex flex-col">
-              <div className="relative">
-                <img src={course.imageUrl} alt={course.title} className="w-full h-48 object-cover" />
-                <span className="absolute top-0 left-0 bg-blue-500 text-white px-2 py-1 m-2 rounded-md text-sm font-semibold">
-                  {course.catagory}
-                </span>
-              </div>
-              <div className="p-6 flex-grow flex flex-col justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold mb-2 text-gray-800">{course.title}</h2>
-                  <p className="text-gray-600 mb-4">{course.description}</p>
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[200px]">
+            <ClipLoader size={50} color={"#3b82f6"} loading={loading} />
+          </div>
+        ) : filteredCourses.length === 0 ? (
+          <div className="text-center text-gray-500">No courses found. Try a different search or category.</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:px-20 lg:gap-12 gap-8">
+            {currentCourses.map(course => (
+              <div key={course._id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex flex-col">
+                <div className="relative">
+                  <img src={course.imageUrl} alt={course.title} className="w-full h-48 object-cover" />
+                  <span className="absolute top-0 left-0 bg-blue-500 text-white px-2 py-1 m-2 rounded-md text-sm font-semibold">
+                    {course.catagory}
+                  </span>
                 </div>
-                <div className="flex justify-between items-center mt-4">
-                  <span className="text-sm text-gray-500">{course.duration}</span>
-                  <Link to={`/course/${course._id}`} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center">
-                    <FaGraduationCap className="mr-2" />
-                    Explore
-                  </Link>
+                <div className="p-6 flex-grow flex flex-col justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold mb-2 text-gray-800">{course.title}</h2>
+                    <p className="text-gray-600 mb-4">{course.description}</p>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <span className="text-sm text-gray-500">{course.duration}</span>
+                    <Link to={`/course/${course._id}`} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center">
+                      <FaGraduationCap className="mr-2" />
+                      Explore
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {/* Pagination */}
         {filteredCourses.length > coursesPerPage && (
           <div className="flex justify-center mt-8">
             <nav className="flex items-center bg-white px-4 py-2 rounded-lg shadow-md">
