@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { SearchOutlined, NotificationsNone, ExitToApp } from "@mui/icons-material";
+import { SearchOutlined, NotificationsNone } from "@mui/icons-material";
 import { Badge, Avatar, Menu, MenuItem, IconButton } from "@mui/material";
 import CalendarViewDayIcon from "@mui/icons-material/CalendarViewDay";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import SignOut from "../pages/Authentication/SignOut";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const DashboardHeader = ({ setActiveItem }) => {
     const { currentUser } = useSelector((state) => state.user);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUnreadMessages = async () => {
+            try {
+                const response = await fetch("/api/contact/newMessageCount");
+                const data = await response.json();
+                setUnreadMessagesCount(data.count);
+            } catch (err) {
+                console.error("Error fetching unread messages:", err);
+            }
+        };
+
+        fetchUnreadMessages();
+
+        const interval = setInterval(fetchUnreadMessages, 5000); // Poll every 5 seconds
+        return () => clearInterval(interval); // Clear interval on component unmount
+    }, []);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -17,6 +37,11 @@ const DashboardHeader = ({ setActiveItem }) => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleNotificationsClick = () => {
+        setActiveItem(3); 
+        navigate("/admin");
     };
 
     return (
@@ -45,8 +70,8 @@ const DashboardHeader = ({ setActiveItem }) => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        <IconButton color="primary">
-                            <Badge badgeContent={3} color="error">
+                        <IconButton color="primary" onClick={handleNotificationsClick}>
+                            <Badge badgeContent={unreadMessagesCount} color="error">
                                 <NotificationsNone />
                             </Badge>
                         </IconButton>
@@ -75,7 +100,7 @@ const DashboardHeader = ({ setActiveItem }) => {
                                     </Link>
                                 </MenuItem>
                                 <MenuItem onClick={handleClose}>
-                                    <SignOut/>
+                                    <SignOut />
                                 </MenuItem>
                             </Menu>
                         </div>

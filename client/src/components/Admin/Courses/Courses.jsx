@@ -1,36 +1,14 @@
 import { useState, useEffect } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  TextField,
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  IconButton,
-  useTheme,
-  useMediaQuery,
-  Snackbar,
-  Alert,
-  Button,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel
-} from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Snackbar, Alert, Button, IconButton, InputLabel, MenuItem, Select, FormControl, TextField, Typography, Box, Card, CardContent } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
-import { useSelector } from 'react-redux';
+import { useTheme, useMediaQuery } from '@mui/material';
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('all'); // Filter state: 'all', 'approved', 'unapproved'
+  const [filter, setFilter] = useState('all');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -42,7 +20,7 @@ const Courses = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await fetch('/api/courses/allCourses'); // Fetch all courses for admin
+      const response = await fetch('/api/courses/allCourses');
       const data = await response.json();
       setCourses(data);
     } catch (error) {
@@ -54,10 +32,7 @@ const Courses = () => {
     try {
       const response = await fetch(`/api/courses/delete/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${currentUser.token}`
-        }
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${currentUser.token}` },
       });
 
       if (!response.ok) {
@@ -76,10 +51,7 @@ const Courses = () => {
     try {
       const response = await fetch(`/api/courses/approve/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${currentUser.token}`
-        }
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${currentUser.token}` },
       });
 
       if (!response.ok) {
@@ -87,7 +59,7 @@ const Courses = () => {
         throw new Error(errorData.message);
       }
 
-      fetchCourses(); // Refresh courses
+      fetchCourses();
       showSnackbar('Course approval status updated', 'success');
     } catch (error) {
       showSnackbar(error.message || 'Error updating approval status', 'error');
@@ -111,54 +83,44 @@ const Courses = () => {
       return matchesSearch && !course.isApproved;
     }
 
-    return matchesSearch; // Default: 'all'
+    return matchesSearch;
   });
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Card elevation={3}>
+    <Box className="p-4">
+      <Card className="shadow-lg">
         <CardContent>
-          <TextField
-            label="Search Courses"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Filter</InputLabel>
-            <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="approved">Approved</MenuItem>
-              <MenuItem value="unapproved">Unapproved</MenuItem>
-            </Select>
-          </FormControl>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-4">
+            <TextField
+              label="Search Courses"
+              variant="outlined"
+              fullWidth
+              className="mb-4 sm:mb-0"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <FormControl fullWidth>
+              <InputLabel >Filter</InputLabel>
+              <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="approved">Approved</MenuItem>
+                <MenuItem value="unapproved">Unapproved</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
 
           {isMobile ? (
-            // Mobile view
             filteredCourses.map((course) => (
-              <Card key={course._id} sx={{ mb: 2 }}>
+              <Card key={course._id} className="mb-4 p-4 shadow-sm">
                 <CardContent>
-                  <Typography variant="h6">{course.title}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Category: {course.catagory}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Instructor: {course.instructor}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Price: {course.isPaid ? `$${course.price}` : 'Free'}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Duration: {course.duration}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    Status: {course.isApproved ? 'Approved' : 'Unapproved'}
-                  </Typography>
+                  <Typography variant="h6" className="font-semibold">{course.title}</Typography>
+                  <Typography variant="body2" color="textSecondary">Category: {course.catagory}</Typography>
+                  <Typography variant="body2" color="textSecondary">Instructor: {course.instructor}</Typography>
+                  <Typography variant="body2" color="textSecondary">Price: {course.isPaid ? `$${course.price}` : 'Free'}</Typography>
+                  <Typography variant="body2" color="textSecondary">Duration: {course.duration}</Typography>
+                  <Typography variant="body2" color="textSecondary">Status: {course.isApproved ? 'Approved' : 'Unapproved'}</Typography>
                   {currentUser.role === 'admin' && (
-                    <Box sx={{ mt: 2 }}>
+                    <div className="flex space-x-2 mt-4">
                       <Button
                         onClick={() => toggleApproval(course._id)}
                         color={course.isApproved ? 'warning' : 'success'}
@@ -172,42 +134,40 @@ const Courses = () => {
                         onClick={() => handleDelete(course._id)}
                         color="error"
                         size="small"
-                        sx={{ ml: 1 }}
                       >
                         <DeleteIcon />
                       </IconButton>
-                    </Box>
+                    </div>
                   )}
                 </CardContent>
               </Card>
             ))
           ) : (
-            // Desktop view
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Title</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Instructor</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Duration</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
+            <div className="overflow-x-auto">
+              <table className="min-w-full table-auto">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="py-2 px-4 text-left">Title</th>
+                    <th className="py-2 px-4 text-left">Category</th>
+                    <th className="py-2 px-4 text-left">Instructor</th>
+                    <th className="py-2 px-4 text-left">Price</th>
+                    <th className="py-2 px-4 text-left">Duration</th>
+                    <th className="py-2 px-4 text-left">Status</th>
+                    <th className="py-2 px-4 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {filteredCourses.map((course) => (
-                    <TableRow key={course._id}>
-                      <TableCell>{course.title}</TableCell>
-                      <TableCell>{course.catagory}</TableCell>
-                      <TableCell>{course.instructor}</TableCell>
-                      <TableCell>{course.isPaid ? `$${course.price}` : 'Free'}</TableCell>
-                      <TableCell>{course.duration}</TableCell>
-                      <TableCell>{course.isApproved ? 'Approved' : 'Unapproved'}</TableCell>
-                      <TableCell>
+                    <tr key={course._id} className="border-b">
+                      <td className="py-2 px-4">{course.title}</td>
+                      <td className="py-2 px-4">{course.catagory}</td>
+                      <td className="py-2 px-4">{course.instructor}</td>
+                      <td className="py-2 px-4">{course.isPaid ? `$${course.price}` : 'Free'}</td>
+                      <td className="py-2 px-4">{course.duration}</td>
+                      <td className="py-2 px-4">{course.isApproved ? 'Approved' : 'Unapproved'}</td>
+                      <td className="py-2 px-4">
                         {currentUser.role === 'admin' && (
-                          <>
+                          <div className="flex space-x-2">
                             <Button
                               onClick={() => toggleApproval(course._id)}
                               color={course.isApproved ? 'warning' : 'success'}
@@ -221,23 +181,21 @@ const Courses = () => {
                               onClick={() => handleDelete(course._id)}
                               color="error"
                               size="small"
-                              sx={{ ml: 1 }}
                             >
                               <DeleteIcon />
                             </IconButton>
-                          </>
+                          </div>
                         )}
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                </tbody>
+              </table>
+            </div>
           )}
         </CardContent>
       </Card>
 
-      {/* Snackbar for notifications */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
