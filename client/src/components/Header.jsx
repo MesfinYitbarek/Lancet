@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Close, Email, Facebook, Instagram,
@@ -7,7 +7,6 @@ import {
 import logo from "../assets/Lancet_CPD_Center-1.jpg";
 import { useSelector } from 'react-redux';
 import SignOut from '../pages/Authentication/SignOut';
-
 
 function Header() {
     const { currentUser } = useSelector((state) => state.user);
@@ -55,11 +54,10 @@ function Header() {
                     <Link to="/" className='flex items-center gap-4 group'>
                         <img src={logo} alt="Lancet Logo" className='w-20 md:w-28 transition-transform duration-300 group-hover:scale-105' />
                         <div className='flex flex-col items-start justify-center'>
-                            <h1 className="  text-2xl md:text-3xl font-extrabold font-serif tracking-wide group-hover:text-blue-500 transition-colors duration-300">Lancet</h1>
+                            <h1 className="text-2xl md:text-3xl font-extrabold font-serif tracking-wide group-hover:text-blue-500 transition-colors duration-300">Lancet</h1>
                             <span className='text-lg md:text-xl font-light tracking-widest uppercase group-hover:text-blue-400 transition-colors duration-300'>Consultancy</span>
                         </div>
                     </Link>
-
 
                     <nav className="hidden md:block">
                         <div className="flex space-x-6 text-sm font-serif uppercase font-semibold">

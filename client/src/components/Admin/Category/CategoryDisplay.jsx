@@ -9,11 +9,13 @@ const CategoryDisplay = () => {
   const [error, setError] = useState(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   useEffect(() => {
     fetchCategories();
-  }, [categories]);
+  }, []);
 
   const fetchCategories = async () => {
     try {
@@ -28,12 +30,10 @@ const CategoryDisplay = () => {
 
   const handleDeleteCategory = async (categoryId) => {
     try {
-      const response = await axios.delete(
-        `/api/category/deletecatagory/${categoryId}`
-      );
-
+      const response = await axios.delete(`/api/category/deletecatagory/${categoryId}`);
       if (response.data.success) {
         setCategories(categories.filter((cat) => cat._id !== categoryId));
+        setIsDeleteModalOpen(false);
       }
     } catch (err) {
       console.error(err);
@@ -67,9 +67,19 @@ const CategoryDisplay = () => {
     }
   };
 
+  const openDeleteModal = (categoryId) => {
+    setSelectedCategoryId(categoryId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setSelectedCategoryId(null);
+    setIsDeleteModalOpen(false);
+  };
+
   return (
-    <div className={`relative ${isCreateModalOpen || isEditModalOpen ? 'overflow-hidden' : ''}`}>
-      <div className={`transition-all duration-300 ${isCreateModalOpen || isEditModalOpen ? 'filter brightness-50' : ''}`}>
+    <div className={`relative ${isCreateModalOpen || isEditModalOpen ? "overflow-hidden" : ""}`}>
+      <div className={`transition-all duration-300 ${isCreateModalOpen || isEditModalOpen ? "filter brightness-50" : ""}`}>
         <div className="flex justify-center items-center pt-12 px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-md w-full max-w-4xl mt-12 p-6">
             <div className="flex justify-between items-center mb-6">
@@ -99,13 +109,19 @@ const CategoryDisplay = () => {
                     <tr key={data._id} className="hover:bg-gray-100">
                       <td className="px-6 py-4 whitespace-nowrap">{data.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onClick={() => {
-                          setEditingCategory(data);
-                          setIsEditModalOpen(true);
-                        }} className="text-blue-600 hover:text-blue-900 mr-4">
+                        <button
+                          onClick={() => {
+                            setEditingCategory(data);
+                            setIsEditModalOpen(true);
+                          }}
+                          className="text-blue-600 hover:text-blue-900 mr-4"
+                        >
                           <EditIcon fontSize="small" />
                         </button>
-                        <button onClick={() => handleDeleteCategory(data._id)} className="text-red-600 hover:text-red-900">
+                        <button
+                          onClick={() => openDeleteModal(data._id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
                           <Delete fontSize="small" />
                         </button>
                       </td>
@@ -139,6 +155,29 @@ const CategoryDisplay = () => {
               onEditCategory={handleEditCategory}
               category={editingCategory}
             />
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-lg p-8 max-w-sm w-full">
+            <h2 className="text-lg font-semibold mb-4">Confirm Deletion</h2>
+            <p>Are you sure you want to delete this category? This action cannot be undone.</p>
+            <div className="mt-6 flex justify-end space-x-4">
+              <button
+                onClick={closeDeleteModal}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteCategory(selectedCategoryId)}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

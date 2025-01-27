@@ -47,15 +47,46 @@ export const createCourses = async (req, res, next) => {
   }
 };
 
-//display courses
+// approved course display
 export const courses = async (req, res, next) => {
   try {
-    const courses = await Course.find();
-    res.json(courses);
+    const approvedCourses = await Course.find({ isApproved: true });
+    res.json(approvedCourses);
   } catch (error) {
     next(error);
   }
 };
+
+// all course display for admin
+export const allCoursesForAdmin = async (req, res, next) => {
+  try {
+    const allCourses = await Course.find();
+    res.json(allCourses);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//admin to approve or unapprove a course.
+export const toggleApproval = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const course = await Course.findById(id);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Toggle approval status
+    course.isApproved = !course.isApproved;
+    await course.save();
+
+    res.status(200).json({ message: `Course ${course.isApproved ? "approved" : "unapproved"}` });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // course detail display
 export const courseDetails = async (req, res) => {
   try {

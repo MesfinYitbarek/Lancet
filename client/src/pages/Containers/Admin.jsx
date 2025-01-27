@@ -12,9 +12,9 @@ import { Link } from "react-router-dom";
 import DashboardHeader from "../../components/DashboardHeader";
 import { Home } from "@mui/icons-material";
 import Courses from "../../components/Admin/Courses/Courses";
-import Message from "../../components/Admin/Message";
 import Users from "../../components/Admin/Users/Users";
 import CategoryDisplay from "../../components/Admin/Category/CategoryDisplay";
+import ContactUs from "../../components/Admin/ContactUs/ContactUs";
 
 const navigationItems = [
   { name: "Dashboard", icon: <HomeIcon />, isActive: true },
@@ -62,7 +62,7 @@ const AdminContainer = () => {
       case "Categories":
         return <CategoryDisplay />;
       case "Messages":
-        return <Message />;
+        return <ContactUs />;
       case "Users":
         return <Users />;
       default:

@@ -3,19 +3,19 @@ import mongoose from "mongoose";
 const courseSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   imageUrl: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   duration: {
     type: String,
-    required: true
+    required: true,
   },
   catagory: {
     type: String,
@@ -40,15 +40,15 @@ const courseSchema = new mongoose.Schema({
     type: [String],
   },
   curriculum: {
-    type: [Object], 
+    type: [Object],
   },
   review: {
     type: String,
-    default:"no data" ,
+    default: "no data",
   },
   rating: {
     type: Number,
-  }, 
+  },
   reviewCount: {
     type: Number,
     default: 0,
@@ -57,19 +57,22 @@ const courseSchema = new mongoose.Schema({
     type: String,
   },
   userRef: {
-    type:String,
-    required:true,
+    type: String,
+    required: true,
+  },
+  isApproved: {
+    type: Boolean,
+    default: false, // New attribute
   },
   createdAt: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
     default: Date.now,
   },
-}, {timestamps: true});
-
+}, { timestamps: true });
 const Course = mongoose.model('Course', courseSchema);
 
 

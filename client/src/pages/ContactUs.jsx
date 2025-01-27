@@ -1,39 +1,64 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import image1 from "../assets/pexels-startup-stock-photos-7075.jpg"
+import axios from 'axios';
+import image1 from "../assets/pexels-startup-stock-photos-7075.jpg";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Close, Email, LocationOn, Phone } from '@mui/icons-material';
 import { Alert, Box, Collapse, IconButton } from '@mui/material';
+
 const ContactUs = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+  const [open, setOpen] = useState(true);
 
-    const [formSubmitted, setFormSubmitted] = useState(false);
-    const [open, setOpen] = useState(true);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const contactData = [
-        {
-          title: "Address",
-          content: "Ali Ketema Building, 1st Floor, Dessie, Ethiopia",
-          icon: <LocationOn />,
-          delay: 0.1,
-        },
-        {
-          title: "Phone",
-          content: "+251935616060 / 0912370018",
-          icon: <Phone />,
-          delay: 0.3,
-        },
-        {
-          title: "Email",
-          content: "info@lancetconsultancy.com",
-          icon: <Email />,
-          delay: 0.5,
-        },
-      ];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormSubmitted(false);
+    setError(null);
+
+    try {
+      const response = await axios.post('/api/contact/contact', formData);
+      if (response.status === 201) {
+        setFormSubmitted(true);
+        setOpen(true);
+        setFormData({ name: '', email: '', message: '' }); // Reset form fields
+      }
+    } catch (err) {
+      setError('Failed to submit the message. Please try again later.');
+    }
+  };
+
+  const contactData = [
+    {
+      title: "Address",
+      content: "Ali Ketema Building, 1st Floor, Dessie, Ethiopia",
+      icon: <LocationOn />,
+      delay: 0.1,
+    },
+    {
+      title: "Phone",
+      content: "+251935616060 / 0912370018",
+      icon: <Phone />,
+      delay: 0.3,
+    },
+    {
+      title: "Email",
+      content: "info@lancetconsultancy.com",
+      icon: <Email />,
+      delay: 0.5,
+    },
+  ];
 
   return (
     <div>
-        <Header/>
+      <Header />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -55,7 +80,7 @@ const ContactUs = () => {
         >
           <h2 className="text-5xl font-nunito font-bold text-blue-800 dark:text-white mb-4">Get in Touch</h2>
           <p className="text-lg md:text-xl max-w-4xl mx-auto text-gray-600 dark:text-gray-300 text-justify">
-          We’re thrilled that you’re reaching out to us. Your feedback, questions, and inquiries are of great importance to us. You can either use the provided contact information to get in touch with our team or simply fill out the form below. We look forward to speaking with you and are excited to assist you.
+            We’re thrilled that you’re reaching out to us. Your feedback, questions, and inquiries are of great importance to us. You can either use the provided contact information to get in touch with our team or simply fill out the form below. We look forward to speaking with you and are excited to assist you.
           </p>
         </motion.div>
 
@@ -85,9 +110,7 @@ const ContactUs = () => {
           className="dark:bg-gray-700 flex justify-center rounded-lg p-4 md:p-10"
         >
           <form
-            data-aos="fade-up"
-            data-aos-once="true"
-
+            onSubmit={handleSubmit}
             className="flex flex-col dark:text-white dark:bg-gray-500 space-y-4 w-full max-w-[650px] bg-white shadow-md p-6 md:p-10 rounded-xl border border-slate-400"
           >
             <div className="flex flex-col space-y-2">
@@ -95,8 +118,8 @@ const ContactUs = () => {
                 type="text"
                 id="name"
                 name="name"
-
-
+                value={formData.name}
+                onChange={handleInputChange}
                 className="px-4 py-2 border-b dark:bg-gray-500 dark:text-white border-slate-400 focus:border-b-2 focus:border-b-sky-600 focus:outline-none w-full dark:placeholder:text-white focus:placeholder:text-sky-600"
                 placeholder="Name"
                 required
@@ -107,7 +130,8 @@ const ContactUs = () => {
                 type="email"
                 id="email"
                 name="email"
-
+                value={formData.email}
+                onChange={handleInputChange}
                 className="px-4 py-2 dark:bg-gray-500 dark:text-white border-slate-400 border-b dark:placeholder:text-white focus:border-b-2 focus:border-b-sky-600 focus:outline-none w-full focus:placeholder:text-sky-600"
                 placeholder="Email"
                 required
@@ -117,7 +141,8 @@ const ContactUs = () => {
               <textarea
                 id="message"
                 name="message"
-
+                value={formData.message}
+                onChange={handleInputChange}
                 className="px-4 py-2 dark:bg-gray-500 dark:text-white border border-slate-400 dark:placeholder:text-white resize-none h-[170px] focus:outline-sky-600 w-full focus:placeholder:text-sky-600"
                 placeholder="Message"
                 required
@@ -129,7 +154,7 @@ const ContactUs = () => {
             >
               Send Message
             </button>
-            {formSubmitted && (
+            {formSubmitted && !error && (
               <Box sx={{ width: "100%" }}>
                 <Collapse in={open}>
                   <Alert
@@ -152,12 +177,36 @@ const ContactUs = () => {
                 </Collapse>
               </Box>
             )}
+            {error && (
+              <Box sx={{ width: "100%" }}>
+                <Collapse in={open}>
+                  <Alert
+                    severity="error"
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setOpen(false);
+                        }}
+                      >
+                        <Close fontSize="inherit" />
+                      </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                  >
+                    {error}
+                  </Alert>
+                </Collapse>
+              </Box>
+            )}
           </form>
         </motion.div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ContactUs
+export default ContactUs;
